@@ -29,3 +29,8 @@ jobs:
           aws --version
           date > test-date.txt
           aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
+      - name: Test Terraform Init
+        run: |
+          terraform init
+          terraform plan
+          terraform workspace list
