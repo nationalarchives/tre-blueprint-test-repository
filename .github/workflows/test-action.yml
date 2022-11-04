@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - feature/DTE-421/initial-test-action
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
 jobs:
   example-job:
     runs-on: ubuntu-latest
@@ -15,7 +18,14 @@ jobs:
           print('Test 2.1')
           print('Test 2.2')
         shell: python
+      - name: Configure AWS credentials for test AWS role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: eu-west-2
+          role-session-name: InternalGitHubActionsRoleName
       - name: AWS Access Test
         run: |
           aws --version
-          aws sts get-caller-identity
+          date > test-date.txt
+          aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
