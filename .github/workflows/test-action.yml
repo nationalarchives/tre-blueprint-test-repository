@@ -1,0 +1,17 @@
+name: test-action
+on:
+  push:
+    branches:
+      - feature/DTE-421/initial-test-action
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test 1
+        run: |
+          printf 'Test 1\n'
+      - name: Test 2
+        run: |
+          print('Test 2.1')
+          print('Test 2.2')
+        shell: python
