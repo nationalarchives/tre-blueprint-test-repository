@@ -18,3 +18,4 @@ jobs:
       - name: AWS Access Test
         run: |
           aws --version
+          aws sts get-caller-identity
