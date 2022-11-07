@@ -16,4 +16,4 @@ jobs:
       - name: Test 1
         run: |
           printf 'example_env_var=%s\n' "${example_env_var}"
-          printf 'example_env_var=%s\n' "${{ github.events.inputs.example-input-1 }}"
+          printf 'example_env_var=%s\n' "${{ github.event.inputs.example-input-1 }}"
