@@ -6,11 +6,11 @@ on:
         required: true
         description: An example input argument
         type: string
-        default: 'Example default value 123'
+        default: 'Example default value 42!'
 jobs:
   example-job-1:
     env:
-      example_env_var: 'Alpha, bravo, charlie'
+      example_env_var: 'Alpha, bravo, charlie, delta, 42'
     runs-on: ubuntu-latest
     steps:
       - name: Test 1
