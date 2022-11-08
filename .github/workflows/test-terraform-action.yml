@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
-          echo ${{ tf_backend }} | backend.conf
+          echo ${{ secrets.tf_backend }} | backend.conf
           pwd
           ls -la
           cd test-terraform
