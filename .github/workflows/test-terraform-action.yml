@@ -33,8 +33,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
-          cd test-terraform       
-          aws ssm get-parameters --name $${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          cd test-terraform    
+          echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
+          aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           pwd
           ls -la
           terraform init -backend-config=backend.conf
