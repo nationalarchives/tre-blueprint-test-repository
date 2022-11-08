@@ -33,9 +33,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
+          cd test-terraform
           echo ${{ secrets.tf_backend }} | backend.conf
           pwd
           ls -la
-          cd test-terraform
           terraform init -backend-config=backend.conf
           terraform workspace list
