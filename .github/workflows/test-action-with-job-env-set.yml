@@ -42,3 +42,11 @@ jobs:
       - name: terraform-apply step 1
         run: |
           printf 'environment-name=%s\n' "${{ github.event.inputs.environment-name }}"
+      - name: Build artifact step 1
+        run: |
+          date > build-artifact-test.txt
+      - name: Build artifact step 2
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact-test
+          path: build-artifact-test.txt
