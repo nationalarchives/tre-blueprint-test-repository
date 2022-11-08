@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       setup-output-1: 'setup-output-1 value'
-      setup-output-2: ${{ steps.set setup-output-2.outputs.foo }}
+      setup-output-2: ${{ steps.set-setup-output-2.outputs.foo }}
     steps:
       - name: setup step 1
         run: |
           printf 'example_env_var=%s\n' "${example_env_var}"
           printf 'environment-name=%s\n' "${{ github.event.inputs.environment-name }}"
-      - name: set setup-output-2
+      - name: set-setup-output-2
         run: echo "foo=foxtrot, golf, hotel" >> $GITHUB_OUTPUT
   terraform-plan:
     needs:
