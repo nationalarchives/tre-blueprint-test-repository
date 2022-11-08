@@ -34,7 +34,7 @@ jobs:
       - name: Test Terraform Init
         run: |
           cd test-terraform
-          echo ${{ secrets.tf_backend }} | tee backend.conf
+          echo ${{ secrets.TF_BACKEND }} >> backend.conf
           pwd
           ls -la
           terraform init -backend-config=backend.conf
