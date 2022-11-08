@@ -35,7 +35,7 @@ jobs:
   terraform-apply:
     environment: ${{ github.event.inputs.environment-name }}
     needs:
-      - terraform-apply
+      - terraform-plan
     runs-on: ubuntu-latest
     steps:
       - name: terraform-apply step 1
