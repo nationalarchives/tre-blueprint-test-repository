@@ -1,4 +1,4 @@
-name: test-action
+name: test-terraform-action
 on:
   push:
     branches:
@@ -34,7 +34,7 @@ jobs:
       - name: Test Terraform Init
         run: |
           cd test-terraform
-          echo ${{ secrets.tf_backend }} | backend.conf
+          echo ${{ secrets.tf_backend }} | tee backend.conf
           pwd
           ls -la
           terraform init -backend-config=backend.conf
