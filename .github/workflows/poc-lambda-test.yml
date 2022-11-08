@@ -1,3 +1,4 @@
+# Run tests for poc-lambda component
 on:
   push:
     branches:
