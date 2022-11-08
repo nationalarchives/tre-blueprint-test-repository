@@ -34,6 +34,9 @@ jobs:
       - name: Test Terraform Init
         run: |
           cd test-terraform
+          echo $${{ secrets.REPO_SECRET_A }}
+          echo $${{ secrets.REPO_SECRET_A }} >> test.txt
+          cat test.txt          
           echo ${{ secrets.TF_BACKEND }} >> backend.conf
           pwd
           ls -la
