@@ -1,0 +1,43 @@
+name: test-action-with-job-env-set
+on:
+  # workflow_dispatch permits manual trigger in GitHub UI
+  workflow_dispatch:
+    inputs:
+      environment-name:
+        required: true
+        description: Environment to deploy to
+        type: string
+jobs:
+  setup:
+    env:
+      example_env_var: 'Alpha, bravo, charlie, delta, 42'
+    runs-on: ubuntu-latest
+    outputs:
+      setup-output-1: 'setup-output-1 value'
+      setup-output-2: ${{ steps.set setup-output-2.outputs.foo }}
+    steps:
+      - name: setup step 1
+        run: |
+          printf 'example_env_var=%s\n' "${example_env_var}"
+          printf 'environment-name=%s\n' "${{ github.event.inputs.environment-name }}"
+      - name: set setup-output-2
+        run: echo "foo=foxtrot, golf, hotel" >> $GITHUB_OUTPUT
+  terraform-plan:
+    needs:
+      - setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: terraform-plan step 1
+        run: |
+          printf 'environment-name=%s\n' "${{ github.event.inputs.environment-name }}"
+          printf 'setup-output-1=%s\n' "${{ needs.setup.outputs.setup-output-1 }}"
+          printf 'setup-output-2=%s\n' "${{ needs.setup.outputs.setup-output-2 }}"
+  terraform-apply:
+    environment: ${{ github.event.inputs.environment-name }}
+    needs:
+      - terraform-apply
+    runs-on: ubuntu-latest
+    steps:
+      - name: terraform-apply step 1
+        run: |
+          printf 'environment-name=%s\n' "${{ github.event.inputs.environment-name }}"
