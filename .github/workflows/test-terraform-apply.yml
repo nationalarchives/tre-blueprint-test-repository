@@ -1,4 +1,4 @@
-name: 'Terraform apply'
+name: Terraform apply
 on:
   workflow_dispatch:
     inputs:
@@ -12,6 +12,6 @@ permissions:
   contents: write
 jobs:
   apply:
-    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
+    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-apply.yml@feature/DTE-432/initial-terraform-config
     with:
       environment: ${{ github.event.inputs.environment }}
