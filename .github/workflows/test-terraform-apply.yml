@@ -12,6 +12,6 @@ permissions:
   contents: write
 jobs:
   apply:
-    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-apply.yml@feature/DTE-432/initial-terraform-config
+    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@main
     with:
       environment: ${{ github.event.inputs.environment }}
