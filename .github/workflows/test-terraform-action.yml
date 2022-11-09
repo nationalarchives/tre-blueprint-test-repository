@@ -70,14 +70,14 @@ jobs:
     needs: 
       - example-job
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Download math result for job 1
         uses: actions/download-artifact@v3
         with:
           name: terraform-plan
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
-          ls -R
+          ls -la
           cd test-terraform
           ls -la
