@@ -1,0 +1,17 @@
+name: Terraform apply
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        description: The environment to deploy against.
+        type: string
+        default: intg
+permissions:
+  id-token: write
+  contents: write
+jobs:
+  apply:
+    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-apply.yml@feature/DTE-432/initial-terraform-config
+    with:
+      environment: ${{ github.event.inputs.environment }}

@@ -1,0 +1,79 @@
+name: test-terraform-action
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+# permissions:
+#   id-token: write   # This is required for requesting the JWT
+#   contents: read    # This is required for actions/checkout
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials for test AWS role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: eu-west-2
+          role-session-name: InternalGitHubActionsRoleName
+      - name: AWS Access Test
+        run: |
+          aws --version
+          date > test-date.txt
+          aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Terraform Plan
+        run: |
+          terraform -v
+          echo "${{ secrets.TF_BACKEND }}"
+          cd test-terraform    
+          echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
+          aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          pwd
+          ls -la
+          terraform init -backend-config=backend.conf
+          terraform workspace list
+          terraform workspace select ${{ inputs.environment }}
+          terraform plan -out plan.out
+          ls -la
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: test-terraform/plan.out
+  apply-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials for test AWS role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: eu-west-2
+          role-session-name: InternalGitHubActionsRoleName
+      - name: AWS Access Test
+        run: |
+          aws --version
+          date > test-date.txt
+          aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
+      - name: Checkout
+        uses: actions/checkout@v2
+  test-artifect:
+    runs-on: ubuntu-latest
+    needs: 
+      - example-job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: terraform-plan
+          path: test-terraform/
+      - name: Test Terraform Init
+        run: |
+          ls -la
+          cd test-terraform
+          ls -la
