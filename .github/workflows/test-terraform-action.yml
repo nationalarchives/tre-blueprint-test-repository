@@ -42,7 +42,7 @@ jobs:
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
-          terrafor plan -out plan.out
+          terraform plan -out plan.out
   apply-job:
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +61,9 @@ jobs:
         uses: actions/checkout@v2
   test-artifect:
     runs-on: ubuntu-latest
-    steps:     
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 
       - name: Test Terraform Init
         run: |
           ls -la
