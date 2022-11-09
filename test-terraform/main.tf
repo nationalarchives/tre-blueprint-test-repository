@@ -14,7 +14,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "foo" {
-  bucket = "tre-test-workspace"
+  bucket = "tre-test-workspace-2"
 }
 
 resource "aws_s3_bucket_public_access_block" "foo" {
