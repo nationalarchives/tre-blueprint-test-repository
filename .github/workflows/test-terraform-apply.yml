@@ -17,3 +17,4 @@ jobs:
       environment: ${{ github.event.inputs.environment }}
     secrets:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
+      TF_BACKEND_PARAMETER_STORE: ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
