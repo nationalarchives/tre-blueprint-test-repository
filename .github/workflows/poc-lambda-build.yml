@@ -7,15 +7,11 @@ on:
     types: [opened, reopened]
     branches: [main]
   workflow_dispatch:
-    inputs:
-      python-version:
-        required: true
-        description: The Python version to use
-        type: string
-        default: "3.9"
 jobs:
   poc-lambda-build:
     runs-on: ubuntu-latest
+    env:
+      python_version: '3.9'
     steps:
       - name: Diagnostic info
         run: |
@@ -23,10 +19,10 @@ jobs:
           printf '${{ github.api_url }}=%s\n' "${{ github.api_url }}"
       - name: Checkout current
         uses: actions/checkout@v3
-      - name: Set up Python ${{ github.event.inputs.python-version }}
+      - name: Set up Python ${ env.python_version }
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ github.event.inputs.python-version }}
+          python-version: ${ env.python_version }
       - name: Run tests
         run: |
           python3 --version
