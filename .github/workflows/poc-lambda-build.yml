@@ -14,6 +14,7 @@ jobs:
       - name: Diagnostic info
         run: |
           printf 'github.event.repository.name=%s\n' "${{ github.event.repository.name }}"
+          printf '${{ github.api_url }}=%s\n' "${{ ${{ github.api_url }} }}"
       - name: Checkout current
         uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
