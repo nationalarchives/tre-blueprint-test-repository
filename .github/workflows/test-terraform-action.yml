@@ -43,6 +43,12 @@ jobs:
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform plan -out plan.out
+          ls -la
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: plan.out     
   apply-job:
     runs-on: ubuntu-latest
     steps:
@@ -62,8 +68,12 @@ jobs:
   test-artifect:
     runs-on: ubuntu-latest
     steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: terraform-plan
       - name: Checkout
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
           ls -la
