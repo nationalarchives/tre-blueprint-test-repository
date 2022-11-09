@@ -34,7 +34,7 @@ jobs:
       - name: Test Terraform Init
         run: |
           terraform -v
-          echo ${{ TF_BACKEND }}
+          echo ${{ secrets.TF_BACKEND }}
           cd test-terraform    
           echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
           aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
