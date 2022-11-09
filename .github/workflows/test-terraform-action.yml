@@ -37,12 +37,13 @@ jobs:
           cd test-terraform    
           echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
           aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -out plan.out
+          terraform plan -var-file="terraform.tfvars" -out plan.out
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
