@@ -79,4 +79,6 @@ jobs:
         run: |
           ls -la
           cd test-terraform
+          aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars       
           terraform apply -input=false plan.out
