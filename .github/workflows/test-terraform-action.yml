@@ -76,6 +76,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: terraform-plan
+          path: test-terraform/
       - name: Test Terraform Init
         run: |
           ls -la
