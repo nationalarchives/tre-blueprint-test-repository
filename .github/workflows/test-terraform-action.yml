@@ -42,16 +42,13 @@ jobs:
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
-          terraform plan -out plan_out.txt
+          terraform plan -out plan.out
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
-        run: |
-          ls -la
-          pwd
         with:
           name: terraform-plan
-          path: plan_out.txt    
+          path: test-terraform/plan.out
   apply-job:
     runs-on: ubuntu-latest
     steps:
