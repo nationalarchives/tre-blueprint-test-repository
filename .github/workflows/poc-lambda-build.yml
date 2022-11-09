@@ -9,8 +9,6 @@ on:
   workflow_dispatch:
 jobs:
   poc-lambda-build:
-    needs:
-      - poc-lambda-test
     runs-on: ubuntu-latest
     steps:
       - name: Diagnostic info
