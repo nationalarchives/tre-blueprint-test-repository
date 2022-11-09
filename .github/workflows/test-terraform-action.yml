@@ -78,6 +78,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Test Terraform Init
         run: |
-          ls -la
+          ls -R
           cd test-terraform
           ls -la
