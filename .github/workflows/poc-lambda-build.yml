@@ -1,0 +1,40 @@
+# Build poc-lambda component artifact
+on:
+  push:
+    branches:
+      - 'feature/**'
+  pull_request:
+    types: [opened, reopened]
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  poc-lambda-build:
+    needs:
+      - poc-lambda-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Diagnostic info
+        run: |
+          printf 'github.event.repository.name=%s\n' "${{ github.event.repository.name }}"
+      - name: Checkout current
+        uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Run tests
+        run: |
+          python3 --version
+          cd poc-lambda
+          python3 -m unittest discover ./tests -p 'test_*.py'
+      - name: Get the version to use to tag this build
+        id: build-tag
+        uses: nationalarchives/tdr-github-actions/.github/actions/get-next-version@main
+        with:
+          repo-name: ${{ github.event.repository.name }}
+      - name: Diagnostic info
+        run: |
+          printf 'steps.build-tag.outputs.next-version=%s\n' "${{ steps.build-tag.outputs.next-version }}"
+      - name: Docker build
+        run: |
+          docker images
