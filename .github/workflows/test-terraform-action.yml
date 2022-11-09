@@ -1,23 +1,17 @@
 name: test-terraform-action
 on:
-  push:
-    branches:
-      - feature/DTE-432/initial-terraform-config
-permissions:
-  id-token: write   # This is required for requesting the JWT
-  contents: read    # This is required for actions/checkout
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+# permissions:
+#   id-token: write   # This is required for requesting the JWT
+#   contents: read    # This is required for actions/checkout
 jobs:
-  example-job:
+  plan:
     runs-on: ubuntu-latest
     steps:
-      - name: Test 1
-        run: |
-          printf 'Test 1\n'
-      - name: Test 2
-        run: |
-          print('Test 2.1')
-          print('Test 2.2')
-        shell: python
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -31,7 +25,7 @@ jobs:
           aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Test Terraform Init
+      - name: Terraform Plan
         run: |
           terraform -v
           echo "${{ secrets.TF_BACKEND }}"
@@ -42,6 +36,7 @@ jobs:
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
+          terraform workspace select ${{ inputs.environment }}
           terraform plan -out plan.out
           ls -la
       - name: 'Upload Artifact'
