@@ -15,3 +15,5 @@ jobs:
     uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
     with:
       environment: ${{ github.event.inputs.environment }}
+    secrets:
+      ROLE_ARN: ${{ secrets.ROLE_ARN }}
