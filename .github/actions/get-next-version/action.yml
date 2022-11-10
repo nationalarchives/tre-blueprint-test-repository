@@ -1,4 +1,6 @@
-name: get-next-version
+# Action to get the next version number for a specified repository. An
+# optional version suffix can be supplied (e.g. "beta" for "1.2.3-beta")
+name: get-version
 description: 'Get the next version number after the latest git tag'
 inputs:
   repo-name:
@@ -14,19 +16,18 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Set PYTHONPATH to "${{ github.action_path }}" (for next steps)
+    - name: Setup
+      shell: bash
+      run: |
+        printf 'github.action_path=%s\n' "${{ github.action_path }}"
+        printf '$inputs.repo-name=%s\n' "${{ inputs.repo-name }}"
+        # The following cd command does not persist across steps
+        cd '${{ github.action_path }}'
+        pip install --requirement requirements.txt
+    - name: 'Set PYTHONPATH to "${{ github.action_path }}"'
       shell: bash
       run: |
         echo "PYTHONPATH=${{ github.action_path }}" >> $GITHUB_ENV
-    - name: Install Python dependencies
-      shell: bash
-      run: |
-        pwd
-        ls -la
-        cd .github/actions/get-next-version
-        ls -la
-        pip install --requirement requirements.txt
-        printf 'PYTHONPATH=%s\n' "$PYTHONPATH"
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
       id: next-tag
       shell: python
@@ -35,10 +36,10 @@ runs:
         from get_next_version import get_next_version
         
         next_version = get_next_version(
-          repo_name='${{ inputs.repo-name }}',
-          version_suffix=None
+            repo_name='${{ inputs.repo-name }}',
+            version_suffix=None
         )
         
         # Save step output values in GitHub's step output file
         with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
-          f.write(f'next-version={next_version}')
+            f.write(f'next-version={next_version}')
