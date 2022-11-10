@@ -22,8 +22,11 @@ runs:
         cd .github/actions/get-next-version
         ls -la
     - name: Install Python dependencies
-      run: pip install --requirement requirements.txt
       shell: bash
+      run: |
+        pwd
+        ls -la
+        pip install --requirement requirements.txt
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
       id: next-tag
       shell: python
