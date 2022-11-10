@@ -8,6 +8,8 @@ on:
     branches: [main]
   # Enable manual run; must also be in main branch to become visible though
   workflow_dispatch:
+permissions:
+  id-token: write   # This is required for requesting the JWT
 jobs:
   poc-lambda-build:
     runs-on: ubuntu-latest
