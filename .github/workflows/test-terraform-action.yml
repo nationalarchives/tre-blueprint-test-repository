@@ -8,9 +8,9 @@ on:
     secrets:
       ROLE_ARN:
         required: true
-      TF_BACKEND_PARAMETER_STORE:
+      AWS_PARAM_STORE_TF_BACKEND_KEY:
         required: true
-      TEST_DEV_TFVARS:
+      AWS_PARAM_STORE_TF_VARS_KEY:
         required: true
 jobs:
   plan:
@@ -22,23 +22,21 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
-          role-session-name: InternalGitHubActionsRoleName
+          role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Terraform Plan
         run: |
           terraform -v
-          echo "${{ secrets.TF_BACKEND }}"
           cd test-terraform    
-          echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
-          aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
-          aws ssm get-parameters --name ${{ secrets.TEST_DEV_TFVARS }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
+          terraform plan -var-file="terraform.tfvars" -out plan.out
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
@@ -66,7 +64,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
-          role-session-name: InternalGitHubActionsRoleName
+          role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download math result for job 1
@@ -78,8 +76,8 @@ jobs:
         run: |
           ls -la
           cd test-terraform
-          aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
-          aws ssm get-parameters --name ${{ secrets.TEST_DEV_TFVARS }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}              
