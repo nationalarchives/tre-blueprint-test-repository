@@ -9,7 +9,7 @@ on:
   # Enable manual run; must also be in main branch to become visible though
   workflow_dispatch:
 permissions:
-  id-token: write   # This is required for requesting the JWT
+  id-token: write  # required by aws-actions/configure-aws-credentials
 jobs:
   poc-lambda-build:
     runs-on: ubuntu-latest
@@ -69,5 +69,5 @@ jobs:
           docker images
           docker tag \
             "${{ steps.docker-build.env.DOCKER_IMAGE_TAG }}" \
-            "$REGISTRY/tre-v2/${{ env.docker_image_name }}:${{ steps.build-tag.outputs.next-version }}""
+            "$REGISTRY/tre-v2/${{ env.docker_image_name }}:${{ steps.build-tag.outputs.next-version }}"
           docker images
