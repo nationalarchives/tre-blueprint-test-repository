@@ -20,11 +20,6 @@ jobs:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
           role-session-name: InternalGitHubActionsRoleName
-      - name: AWS Access Test
-        run: |
-          aws --version
-          date > test-date.txt
-          aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
       - name: Checkout
         uses: actions/checkout@v2
       - name: Terraform Plan
@@ -47,8 +42,10 @@ jobs:
         with:
           name: terraform-plan
           path: test-terraform/plan.out
-  apply-job:
+  apply:
     runs-on: ubuntu-latest
+    needs: 
+      - plan
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
@@ -56,18 +53,6 @@ jobs:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
           role-session-name: InternalGitHubActionsRoleName
-      - name: AWS Access Test
-        run: |
-          aws --version
-          date > test-date.txt
-          aws s3 cp test-date.txt s3://dev-te-testdata/tmp/test-date.txt
-      - name: Checkout
-        uses: actions/checkout@v2
-  test-artifect:
-    runs-on: ubuntu-latest
-    needs: 
-      - plan
-    steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Download math result for job 1
