@@ -1,5 +1,5 @@
 variable "env" {
-  default = "test-dev"
+  type = string
 }
 
 variable "assume_role" {
