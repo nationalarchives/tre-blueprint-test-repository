@@ -1,0 +1,34 @@
+name: get-next-version
+description: 'Get the next version number after the latest git tag'
+inputs:
+  repo-name:
+    description: 'The name of the repository to get the latest version for'
+    required: true
+  version-suffix:
+    description: 'Optional version suffix (e.g. "beta" for "1.2.3-beta")'
+    required: false
+outputs:
+  next-version:
+    description: The next version for the repository
+    value: ${{ steps.next-tag.outputs.next-version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Install Python dependencies
+      run: pip install --requirement requirements.txt
+      shell: bash
+    - name: 'Get next version for repository "${{ inputs.repo-name }}"'
+      id: next-tag
+      shell: python
+      run: |
+        import os
+        from get_next_version import get_next_version
+        
+        next_version = get_next_version(
+          repo_name='${{ inputs.repo-name }}',
+          version_suffix=None
+        )
+        
+        # Save step output values in GitHub's step output file
+        with open(os.getenv('GITHUB_OUTPUT'), 'a') as f:
+          f.write(f'next-version={next_version}')

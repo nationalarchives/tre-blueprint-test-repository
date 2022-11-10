@@ -17,8 +17,8 @@ jobs:
       - name: Diagnostic info
         run: |
           printf 'github.event.repository.name=%s\n' "${{ github.event.repository.name }}"
-          printf '${{ github.api_url }}=%s\n' "${{ github.api_url }}"
-          printf '${{ env.python_version }}=%s\n' "${{ env.python_version }}"
+          printf 'github.api_url=%s\n' "${{ github.api_url }}"
+          printf 'env.python_version=%s\n' "${{ env.python_version }}"
       - name: Checkout current
         uses: actions/checkout@v3
       - name: Set up Python ${{ env.python_version }}
@@ -32,7 +32,7 @@ jobs:
           python3 -m unittest discover ./tests -p 'test_*.py'
       - name: Get the version to use to tag this build
         id: build-tag
-        uses: nationalarchives/tdr-github-actions/.github/actions/get-next-version@main
+        uses: nationalarchives/tre-blueprint-test-repository/.github/actions/get-next-version@feature/DTE-433/lambda-deployment-example
         with:
           repo-name: ${{ github.event.repository.name }}
       - name: Diagnostic info
