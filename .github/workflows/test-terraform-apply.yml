@@ -18,3 +18,4 @@ jobs:
     secrets:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
       TF_BACKEND_PARAMETER_STORE: ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
+      TEST_DEV_TFVARS: ${{ secrets.TEST_DEV_TFVARS }}

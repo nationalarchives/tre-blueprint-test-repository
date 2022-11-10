@@ -10,6 +10,8 @@ on:
         required: true
       TF_BACKEND_PARAMETER_STORE:
         required: true
+      TEST_DEV_TFVARS:
+        required: true
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -35,7 +37,7 @@ jobs:
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -var-file="terraform.tfvars" -out plan.out
+          terraform plan -var-file="terraform.tfvars" -out plan.out >> dev/null/
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
