@@ -14,11 +14,14 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Install Python dependencies
+    - name: Setup
       run: |
         pwd
         ls -la
-        pip install --requirement requirements.txt
+        cd .github/actions/get-next-version
+        ls -la
+    - name: Install Python dependencies
+      run: pip install --requirement requirements.txt
       shell: bash
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
       id: next-tag
