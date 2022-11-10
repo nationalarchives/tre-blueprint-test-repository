@@ -64,3 +64,4 @@ jobs:
             --tag "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}" \
             "${{ env.build_dir }}"
           docker images
+          docker push "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}"
