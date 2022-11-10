@@ -1,12 +1,7 @@
 name: Terraform apply
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        required: true
-        description: The environment to deploy against.
-        type: string
-        default: intg
+
 permissions:
   id-token: write
   contents: write
@@ -14,7 +9,8 @@ jobs:
   apply:
     uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
     with:
-      environment: ${{ github.event.inputs.environment }}
+      environment: test_dev
     secrets:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
       TF_BACKEND_PARAMETER_STORE: ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
+      TEST_DEV_TFVARS: ${{ secrets.TEST_DEV_TFVARS }}

@@ -10,9 +10,12 @@ on:
         required: true
       TF_BACKEND_PARAMETER_STORE:
         required: true
+      TEST_DEV_TFVARS:
+        required: true
 jobs:
   plan:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
@@ -29,23 +32,33 @@ jobs:
           cd test-terraform    
           echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
           aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
-          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
+          aws ssm get-parameters --name ${{ secrets.TEST_DEV_TFVARS }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
           ls -la
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -var-file="terraform.tfvars" -out plan.out
+          terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:
           name: terraform-plan
           path: test-terraform/plan.out
+  approve:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: poc-manual-step
+    steps:
+      - name: Manual Approve Info
+        run: |
+          echo ${{ github.triggering_actor }}
+          echo ${{ github.actor }}
   apply:
     runs-on: ubuntu-latest
     needs: 
       - plan
+      - approve
     environment: ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
