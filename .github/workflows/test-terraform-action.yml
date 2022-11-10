@@ -37,7 +37,7 @@ jobs:
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -var-file="terraform.tfvars" -out plan.out >> dev/null/
+          terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
           ls -la
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
