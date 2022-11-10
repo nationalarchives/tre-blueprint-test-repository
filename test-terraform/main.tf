@@ -1,5 +1,8 @@
 provider "aws" {
   region = "eu-west-2"
+  assume_role {
+    role_arn = var.assume_role
+  }
 }
 
 terraform {
@@ -14,11 +17,6 @@ terraform {
 }
 resource "aws_s3_bucket" "common_tre_data" {
   bucket = "${var.env}-tre-test-data"
-}
-
-resource "aws_s3_bucket_policy" "common_tre_data" {
-  bucket = aws_s3_bucket.common_tre_data.bucket
-  policy = data.aws_iam_policy_document.common_tre_data_bucket.json
 }
 
 resource "aws_s3_bucket_acl" "common_tre_data" {
