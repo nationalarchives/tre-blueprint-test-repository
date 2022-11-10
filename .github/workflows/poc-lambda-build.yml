@@ -17,6 +17,8 @@ jobs:
       python_version: '3.9'
       docker_image_name: 'poc-lambda'
       build_dir: 'poc-lambda'
+      aws_region: eu-west-2
+      ecr_registry_path: /tre-v2/
     steps:
       - name: Diagnostic info
         run: |
@@ -46,7 +48,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
-          aws-region: eu-west-2
+          aws-region: ${{ env.aws_region }}
           # triggering-actor could differ for re-runs: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
           role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
       - name: AWS ECR login
@@ -55,13 +57,28 @@ jobs:
       - name: Docker build, tag and push to AWS ECR
         env:
           REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
-          REGISTRY_PATH: /tre-v2/
+          REGISTRY_PATH: ${{ env.ecr_registry_path }}
           IMAGE_NAME: ${{ env.docker_image_name }}
           IMAGE_TAG: ${{ steps.build-tag.outputs.next-version }}
+          ECR_REPOSITORY_NAME: ${{ env.ecr_registry_path }}${{ env.docker_image_name }}
         run: |
           docker images
           docker build \
             --tag "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}" \
             "${{ env.build_dir }}"
           docker images
+
+          # Create ECR repository if it doesn't exist
+          if [[ $(aws ecr describe-repositories \
+              --region "${{ env.aws_region }}" \
+              --repository-names "${ECR_REPOSITORY_NAME}" \
+          ) ]]; then
+              printf 'Repository "%s" already exists' "${ECR_REPOSITORY_NAME}"
+          else
+              aws ecr create-repository \
+                  --region "${{ env.aws_region }}"  \
+                  --repository-name "${ECR_REPOSITORY_NAME}" \
+                  --image-scanning-configuration \
+                  scanOnPush=true
+          fi
           docker push "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}"
