@@ -29,7 +29,7 @@ jobs:
           cd test-terraform    
           echo ${{ secrets.TF_BACKEND_PARAMETER_STORE }}
           aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
-          aws ssm get-parameters --name ${{ secrets.TEST_DEV_TFVARS }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
+          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
           ls -la
           terraform init -backend-config=backend.conf
