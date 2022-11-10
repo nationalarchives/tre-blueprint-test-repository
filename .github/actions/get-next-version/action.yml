@@ -37,7 +37,7 @@ runs:
         
         next_version = get_next_version(
             repo_name='${{ inputs.repo-name }}',
-            version_suffix=None
+            version_suffix='${{ inputs.version-suffix }}'
         )
         
         # Save step output values in GitHub's step output file
