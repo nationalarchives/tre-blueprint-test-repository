@@ -6,6 +6,10 @@ on:
 jobs:
   deploy-lambda:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
