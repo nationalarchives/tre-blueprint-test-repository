@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='testpackage',
+    name='tnatestpackage',
     version='0.1',
-    packages=['testpackage'],
+    packages=['tnatestpackage'],
     include_package_data=True,
     zip_safe=False
 )
