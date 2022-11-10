@@ -26,6 +26,7 @@ runs:
         cd .github/actions/get-next-version
         ls -la
         pip install --requirement requirements.txt
+        printf 'PYTHONPATH=%s\n' "$PYTHONPATH"
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
       id: next-tag
       shell: python
