@@ -28,7 +28,11 @@ jobs:
       - name: Build and publish
         run: |
           export TWINE_USERNAME=aws
-          export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain tna-test-domain --domain-owner ${{ secrets.MANAGEMENT_ACC_ARN }} --query authorizationToken --output text`
-          export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain tna-test-domain --domain-owner ${{ secrets.MANAGEMENT_ACC_ARN }} --repository tna-test-repo --format pypi --query repositoryEndpoint --output text`
+          export TWINE_PASSWORD=`aws codeartifact get-authorization-token --domain tna-test-domain --domain-owner ${{ secrets.MANAG_ACC_NUM }} --region eu-west-2 --query authorizationToken --output text`
+          export TWINE_REPOSITORY_URL=`aws codeartifact get-repository-endpoint --domain tna-test-domain --domain-owner ${{ secrets.MANAG_ACC_NUM }} --repository tna-test-repo --region eu-west-2 --format pypi --query repositoryEndpoint --output text`          
           python setup.py sdist bdist_wheel --verbose
-          twine upload --repository TWINE_REPOSITORY dist/*
+          twine upload dist/*
+
+
+  
+  
