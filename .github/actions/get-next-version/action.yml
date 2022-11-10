@@ -14,17 +14,16 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup
+    - name: Set PYTHONPATH to "${{ github.action_path }}" (for next steps)
+      shell: bash
+      run: |
+        echo "PYTHONPATH=${{ github.action_path }}" >> $GITHUB_ENV
+    - name: Install Python dependencies
       shell: bash
       run: |
         pwd
         ls -la
         cd .github/actions/get-next-version
-        ls -la
-    - name: Install Python dependencies
-      shell: bash
-      run: |
-        pwd
         ls -la
         pip install --requirement requirements.txt
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
