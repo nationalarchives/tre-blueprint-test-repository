@@ -42,16 +42,6 @@ jobs:
       - name: Diagnostic info
         run: |
           printf 'steps.build-tag.outputs.next-version=%s\n' "${{ steps.build-tag.outputs.next-version }}"
-      - name: Docker build
-        id: docker-build
-        env:
-          DOCKER_IMAGE_TAG: "${{ env.docker_image_name }}:${{ steps.build-tag.outputs.next-version }}"
-        run: |
-          docker images
-          docker build \
-            --tag "$DOCKER_IMAGE_TAG" \
-            "${{ env.build_dir }}"
-          docker images
       - name: AWS credential setup
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -62,12 +52,15 @@ jobs:
       - name: AWS ECR login
         id: aws-ecr-login
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Docker tag and push to AWS ECR
+      - name: Docker build, tag and push to AWS ECR
         env:
           REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
+          REGISTRY_PATH: /tre-v2/
+          IMAGE_NAME: ${{ env.docker_image_name }}
+          IMAGE_TAG: ${{ steps.build-tag.outputs.next-version }}
         run: |
           docker images
-          docker tag \
-            "${{ steps.docker-build.env.DOCKER_IMAGE_TAG }}" \
-            "$REGISTRY/tre-v2/${{ env.docker_image_name }}:${{ steps.build-tag.outputs.next-version }}"
+          docker build \
+            --tag "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}" \
+            "${{ env.build_dir }}"
           docker images
