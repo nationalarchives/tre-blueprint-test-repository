@@ -18,7 +18,7 @@ jobs:
       docker_image_name: 'poc-lambda'
       build_dir: 'poc-lambda'
       aws_region: eu-west-2
-      ecr_registry_path: /tre-v2/
+      ecr_registry_path: tre-v2
     steps:
       - name: Diagnostic info
         run: |
@@ -60,11 +60,11 @@ jobs:
           REGISTRY_PATH: ${{ env.ecr_registry_path }}
           IMAGE_NAME: ${{ env.docker_image_name }}
           IMAGE_TAG: ${{ steps.build-tag.outputs.next-version }}
-          ECR_REPOSITORY_NAME: ${{ env.ecr_registry_path }}${{ env.docker_image_name }}
+          ECR_REPOSITORY_NAME: ${{ env.ecr_registry_path }}/${{ env.docker_image_name }}
         run: |
           docker images
           docker build \
-            --tag "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}" \
+            --tag "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}" \
             "${{ env.build_dir }}"
           docker images
 
@@ -81,4 +81,4 @@ jobs:
                   --image-scanning-configuration \
                   scanOnPush=true
           fi
-          docker push "${REGISTRY}${REGISTRY_PATH}${IMAGE_NAME}:${IMAGE_TAG}"
+          docker push "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
