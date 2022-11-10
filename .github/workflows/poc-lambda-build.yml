@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       python_version: '3.9'
+      docker_image_name: 'poc-lambda'
     steps:
       - name: Diagnostic info
         run: |
@@ -42,7 +43,7 @@ jobs:
         run: |
           docker images
           docker build \
-            --tag "${{ steps.build-tag.outputs.next-version }}" \
+            --tag "${{ env.docker_image_name }}:${{ steps.build-tag.outputs.next-version }}" \
             "poc-lambda"
           docker images
       - name: Docker ECR Push
