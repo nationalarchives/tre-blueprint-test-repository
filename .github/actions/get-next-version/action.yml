@@ -15,7 +15,10 @@ runs:
   using: "composite"
   steps:
     - name: Install Python dependencies
-      run: pip install --requirement requirements.txt
+      run: |
+        pwd
+        ls -la
+        pip install --requirement requirements.txt
       shell: bash
     - name: 'Get next version for repository "${{ inputs.repo-name }}"'
       id: next-tag
