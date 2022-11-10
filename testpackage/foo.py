@@ -1,0 +1,2 @@
+def event_python():
+    print("Did you really think you could destroy this Package? She's defied space and time. She's been to a place you couldn't possibly imagine. And now... it is time to go back.")
