@@ -65,5 +65,8 @@ jobs:
           ls -la
           cd test-terraform
           aws ssm get-parameters --name ${{ secrets.TF_BACKEND_PARAMETER_STORE }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
-          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars       
+          aws ssm get-parameters --name test-github-actions-tfvars --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
+          terraform init -backend-config=backend.conf
+          terraform workspace list
+          terraform workspace select ${{ inputs.environment }}              
           terraform apply -input=false plan.out
