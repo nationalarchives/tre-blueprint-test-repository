@@ -45,32 +45,10 @@ jobs:
       - name: Diagnostic info
         run: |
           printf 'steps.build-tag.outputs.next-version=%s\n' "${{ steps.build-tag.outputs.next-version }}"
-      - name: AWS credential setup
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Build and push Docker image to AWS ECR
+        uses: nationalarchives/tre-blueprint-test-repository/.github/actions/docker-build-and-deploy-to-ecr@feature/DTE-433/lambda-deployment-example
         with:
-          role-to-assume: ${{ secrets.ROLE_ARN }}
-          aws-region: ${{ env.aws_region }}
-          # triggering-actor could differ for re-runs: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
-          role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
-      - name: AWS ECR login
-        id: aws-ecr-login
-        uses: aws-actions/amazon-ecr-login@v1
-      - name: Docker build and tag
-        env:
-          REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
-          REGISTRY_PATH: ${{ env.ecr_registry_path }}
-          IMAGE_NAME: ${{ env.docker_image_name }}
-          IMAGE_VERSION: ${{ steps.build-tag.outputs.next-version }}
-          ECR_REPOSITORY_NAME: ${{ env.ecr_registry_path }}/${{ env.docker_image_name }}
-        run: |
-          docker images
-          docker build \
-            --tag "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_VERSION}" \
-            "${{ env.build_dir }}"
-          docker images
-      - name: Docker push to AWS ECR
-        uses: nationalarchives/tre-blueprint-test-repository/.github/actions/aws-ecr-push@feature/DTE-433/lambda-deployment-example
-        with:
+          dockerfile-dir: ${{ env.build_dir }}
           image-name: ${{ env.docker_image_name }}
           image-version: ${{ steps.build-tag.outputs.next-version }}
           ecr-registry: ${{ steps.aws-ecr-login.outputs.registry }}
