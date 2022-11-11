@@ -1,4 +1,4 @@
-# Test poc-lambda python code, build Docker image then deploy to ECR
+# Test poc-lambda Python code; build Docker image; ECR deploy; add git tag.
 on:
   push:
     branches:
