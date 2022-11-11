@@ -38,7 +38,7 @@ jobs:
   #         echo ${{ github.actor }}
   terraform-int-deployment:
     needs: 
-      - deploy-to-int-checkpoint
+      - terraform-test-deployment
     environment: int
     runs-on: ubuntu-latest
     steps:
