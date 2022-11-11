@@ -24,11 +24,11 @@ runs:
     - name: 'AWS ECR docker push'
       shell: bash
       env:
-        REGISTRY: ${{ inputs.registry }}
-        REGISTRY_PATH: ${{ inputs.registry-path }}
+        REGISTRY: ${{ inputs.ecr-registry }}
+        REGISTRY_PATH: ${{ inputs.ecr-registry-path }}
         IMAGE_NAME: ${{ inputs.image-name }}
         IMAGE_TAG: ${{ inputs.image-version }}
-        ECR_REPOSITORY_NAME: ${{ inputs.registry-path }}/${{ inputs.image-name }}
+        ECR_REPOSITORY_NAME: ${{ inputs.ecr-registry-path }}/${{ inputs.image-name }}
       run: |
         # Create ECR repository if it doesn't exist
         if [[ $(aws ecr describe-repositories \
