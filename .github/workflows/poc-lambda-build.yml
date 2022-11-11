@@ -10,6 +10,7 @@ on:
   workflow_dispatch:
 permissions:
   id-token: write  # required by aws-actions/configure-aws-credentials
+  contents: write  # to push new git tag
 jobs:
   poc-lambda-build:
     runs-on: ubuntu-latest
