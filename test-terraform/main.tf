@@ -1,5 +1,8 @@
 provider "aws" {
   region = "eu-west-2"
+  assume_role {
+    role_arn = var.assume_role
+  }
 }
 
 terraform {
@@ -9,8 +12,6 @@ terraform {
       version = "~> 4.0"
     }
   }
-}
-
-resource "aws_s3_bucket" "foo" {
-  bucket = "test-github-actions"
+  backend "s3" {
+  }
 }

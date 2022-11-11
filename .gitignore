@@ -1,5 +1,7 @@
 tmp/
 .venv*/
 venv*/
-.terraform
+.terraform*
+backend*
+*.tfvars
 .vscode
