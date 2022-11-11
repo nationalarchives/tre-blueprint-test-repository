@@ -56,20 +56,21 @@ jobs:
         with:
           name: terraform-plan
           path: test-terraform/plan.out
-  # approve:
-  #   needs: plan
-  #   runs-on: ubuntu-latest
-  #   environment: poc-manual-step
-  #   steps:
-  #     - name: Manual Approve Info
-  #       run: |
-  #         echo ${{ github.triggering_actor }}
-  #         echo ${{ github.actor }}          
+  approve:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: poc-manual-step
+    steps:
+      - name: Manual Approve Info
+        run: |
+          echo ${{ github.triggering_actor }}
+          echo ${{ github.actor }}          
   apply:
     runs-on: ubuntu-latest
     needs: 
       - plan
-    environment: poc-manual-step
+      - approve
+    environment: ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
@@ -92,5 +93,5 @@ jobs:
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           terraform init -backend-config=backend.conf
           terraform workspace list
-          terraform workspace select ${{ inputs.environment }}              
+          terraform workspace select ${{ inputs.environment }}        
           terraform apply -input=false plan.out >> apply.out
