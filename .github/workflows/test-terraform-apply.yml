@@ -10,11 +10,11 @@ jobs:
     uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
     with:
       environment: dev
-    secrets: inherit
-      # ROLE_ARN: ${{ secrets.ROLE_ARN }}
-      # AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
-      # AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
-      # SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+    secrets:
+      ROLE_ARN: ${{ secrets.ROLE_ARN }}
+      AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
+      AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
+      SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
   terraform-test-deployment:
     needs:
       - terraform-dev-deployment
