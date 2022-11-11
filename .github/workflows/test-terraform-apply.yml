@@ -7,7 +7,7 @@ permissions:
   contents: write
 jobs:
   terraform-dev-deployment:
-    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
+    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@main
     with:
       environment: dev
     secrets:
@@ -18,7 +18,7 @@ jobs:
   terraform-test-deployment:
     needs:
       - terraform-dev-deployment
-    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@feature/DTE-432/initial-terraform-config
+    uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/test-terraform-action.yml@main
     with:
       environment: test
     secrets:
