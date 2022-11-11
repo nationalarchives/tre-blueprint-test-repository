@@ -1,4 +1,4 @@
-# Run tests for poc-lambda component
+# Test poc-lambda using multiple Python versions
 on:
   push:
     branches:

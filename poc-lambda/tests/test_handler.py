@@ -22,3 +22,4 @@ class TestExample(unittest.TestCase):
         self.assertTrue(isinstance(result[KEY_ALPHA], dict))
         self.assertTrue(KEY_BRAVO in result[KEY_ALPHA])
         self.assertTrue(KEY_CHARLIE in result)
+        self.fail('Temporary failure to test build')

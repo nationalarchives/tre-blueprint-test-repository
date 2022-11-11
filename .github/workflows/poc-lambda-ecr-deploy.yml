@@ -1,4 +1,4 @@
-# Build poc-lambda component artifact
+# Test poc-lambda python code, build Docker image then deploy to ECR
 on:
   push:
     branches:
