@@ -1,6 +1,6 @@
 # Action to build then push a given Docker image to ECR, creating the
 # repository name in ECR first if it does not exist.
-name: aws-ecr-push
+name: 'Docker build and deploy to ECR'
 description: 'Push Docker image to ECR, creating repository if necessary'
 inputs:
   dockerfile-dir:
