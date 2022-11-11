@@ -32,14 +32,14 @@ runs:
       run: |
         # Create ECR repository if it doesn't exist
         if [[ $(aws ecr describe-repositories \
-          --region "${{ inputs.aws_region }}" \
+          --region "${{ inputs.aws-region }}" \
           --repository-names "${ECR_REPOSITORY_NAME}" \
         ) ]]; then
           printf 'Repository "%s" already exists' "${ECR_REPOSITORY_NAME}"
         else
           printf 'Creating repository "%s"' "${ECR_REPOSITORY_NAME}"
           aws ecr create-repository \
-            --region "${{ inputs.aws_region }}" \
+            --region "${{ inputs.aws-region }}" \
             --repository-name "${ECR_REPOSITORY_NAME}" \
             --image-scanning-configuration \
             scanOnPush=true
