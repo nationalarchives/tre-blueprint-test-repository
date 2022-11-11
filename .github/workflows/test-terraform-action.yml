@@ -17,6 +17,7 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
@@ -69,7 +70,10 @@ jobs:
     needs: 
       - plan
       - approve
-    environment: ${{ inputs.environment }}
+    environment: |
+       ${{ inputs.environment }}
+       poc-manual-step
+
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
