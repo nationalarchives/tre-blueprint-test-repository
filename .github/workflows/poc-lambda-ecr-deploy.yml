@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - 'feature/**'
-  pull_request:
-    types: [opened, reopened]
-    branches: [main]
   # Enable manual run; must also be in main branch to become visible though
   workflow_dispatch:
 permissions:

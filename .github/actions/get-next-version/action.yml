@@ -1,6 +1,6 @@
 # Action to get the next version number for a specified repository. An
 # optional version suffix can be supplied (e.g. "beta" for "1.2.3-beta")
-name: get-version
+name: 'Get next version'
 description: 'Get the next version number after the latest git tag'
 inputs:
   repo-name:
