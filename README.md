@@ -21,6 +21,6 @@ The above action calls the following composite GitHub Action examples:
 * [docker-build-and-deploy-to-ecr](.github/actions/docker-build-and-deploy-to-ecr/action.yml)
 
 Each Docker image should have its own GitHub repository so it can be versioned
-independently using Git tags.
+independently to other components.
 
 # Python WHL packages
