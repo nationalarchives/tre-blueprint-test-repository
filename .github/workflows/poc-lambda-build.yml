@@ -54,6 +54,7 @@ jobs:
           ecr-registry: ${{ steps.aws-ecr-login.outputs.registry }}
           ecr-registry-path: ${{ env.ecr_registry_path }}
           aws-region: ${{ env.aws_region }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
       - name: Add Git tag for this build
         run: |
           git tag ${{ steps.build-tag.outputs.next-version }}
