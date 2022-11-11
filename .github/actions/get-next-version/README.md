@@ -1,6 +1,8 @@
 # get-next-version
 
-Get the latest git tag in a repository and return the next patch version.
+GitHub action and supporting script to return the next version number by
+incrementing the patch number of the latest Git tag. An optional suffix can be
+appended (e.g. "beta" for "1.2.3-beta").
 
 # Testing
 
