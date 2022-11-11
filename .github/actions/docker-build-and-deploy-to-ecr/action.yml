@@ -12,9 +12,6 @@ inputs:
   image-version:
     description: 'The version of the Docker image to push; e.g. "1.2.3"'
     required: true
-  ecr-registry:
-    description: 'The ECR registry, i.e. ---.dkr.ecr.---.amazonaws.com'
-    required: true
   ecr-registry-path:
     description: 'The path part of the repository name; i.e. the "alpha" in "alpha/docker-image-name"'
     required: true
@@ -40,7 +37,7 @@ runs:
     - name: Docker build and tag
       shell: bash
       env:
-        REGISTRY: ${{ inputs.ecr-registry }}
+        REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
         REGISTRY_PATH: ${{ inputs.ecr-registry-path }}
         IMAGE_NAME: ${{ inputs.image-name }}
         IMAGE_VERSION: ${{ inputs.image-version }}
@@ -54,7 +51,7 @@ runs:
     - name: 'AWS ECR docker push'
       shell: bash
       env:
-        REGISTRY: ${{ inputs.ecr-registry }}
+        REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
         REGISTRY_PATH: ${{ inputs.ecr-registry-path }}
         IMAGE_NAME: ${{ inputs.image-name }}
         IMAGE_TAG: ${{ inputs.image-version }}
