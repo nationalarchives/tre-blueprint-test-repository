@@ -1,0 +1,48 @@
+# Action to push a given Docker image to ECR, creating the repository name if
+# it does not exist.
+name: aws-ecr-push
+description: 'Push Docker image to ECR, creating repository if necessary'
+inputs:
+  image-name:
+    description: 'The name of the Docker image to push; e.g. "some-image"'
+    required: true
+  image-version:
+    description: 'The version of the Docker image to push; e.g. "1.2.3"'
+    required: true
+  ecr-registry:
+    description: 'The ECR registry, i.e. ---.dkr.ecr.---.amazonaws.com'
+    required: true
+  ecr-registry-path:
+    description: 'The path part of the repository name; i.e. the "alpha" in "alpha/docker-image-name"'
+    required: true
+  aws-region:
+    description: 'The AWS region to deploy to'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: 'AWS ECR docker push'
+      shell: bash
+      env:
+        REGISTRY: ${{ inputs.registry }}
+        REGISTRY_PATH: ${{ inputs.registry-path }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_TAG: ${{ inputs.image-version }}
+        ECR_REPOSITORY_NAME: ${{ inputs.registry-path }}/${{ inputs.image-name }}
+      run: |
+        # Create ECR repository if it doesn't exist
+        if [[ $(aws ecr describe-repositories \
+          --region "${{ inputs.aws_region }}" \
+          --repository-names "${ECR_REPOSITORY_NAME}" \
+        ) ]]; then
+          printf 'Repository "%s" already exists' "${ECR_REPOSITORY_NAME}"
+        else
+          printf 'Creating repository "%s"' "${ECR_REPOSITORY_NAME}"
+          aws ecr create-repository \
+            --region "${{ inputs.aws_region }}" \
+            --repository-name "${ECR_REPOSITORY_NAME}" \
+            --image-scanning-configuration \
+            scanOnPush=true
+        fi
+
+        docker push "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"

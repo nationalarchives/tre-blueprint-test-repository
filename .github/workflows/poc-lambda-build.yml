@@ -54,31 +54,28 @@ jobs:
       - name: AWS ECR login
         id: aws-ecr-login
         uses: aws-actions/amazon-ecr-login@v1
-      - name: Docker build, tag and push to AWS ECR
+      - name: Docker build and tag
         env:
           REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
           REGISTRY_PATH: ${{ env.ecr_registry_path }}
           IMAGE_NAME: ${{ env.docker_image_name }}
-          IMAGE_TAG: ${{ steps.build-tag.outputs.next-version }}
+          IMAGE_VERSION: ${{ steps.build-tag.outputs.next-version }}
           ECR_REPOSITORY_NAME: ${{ env.ecr_registry_path }}/${{ env.docker_image_name }}
         run: |
           docker images
           docker build \
-            --tag "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}" \
+            --tag "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_VERSION}" \
             "${{ env.build_dir }}"
           docker images
-
-          # Create ECR repository if it doesn't exist
-          if [[ $(aws ecr describe-repositories \
-              --region "${{ env.aws_region }}" \
-              --repository-names "${ECR_REPOSITORY_NAME}" \
-          ) ]]; then
-              printf 'Repository "%s" already exists' "${ECR_REPOSITORY_NAME}"
-          else
-              aws ecr create-repository \
-                  --region "${{ env.aws_region }}"  \
-                  --repository-name "${ECR_REPOSITORY_NAME}" \
-                  --image-scanning-configuration \
-                  scanOnPush=true
-          fi
-          docker push "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"
+      - name: Docker push to AWS ECR
+        uses: nationalarchives/tre-blueprint-test-repository/.github/actions/aws-ecr-push@feature/DTE-433/lambda-deployment-example
+        with:
+          image-name: ${{ env.docker_image_name }}
+          image-version: ${{ steps.build-tag.outputs.next-version }}
+          ecr-registry: ${{ steps.aws-ecr-login.outputs.registry }}
+          ecr-registry-path: ${{ env.ecr_registry_path }}
+          aws-region: ${{ env.aws_region }}
+      - name: Add Git tag for this build
+        run: |
+          git tag ${{ steps.build-tag.outputs.next-version }}
+          git push origin ${{ steps.build-tag.outputs.next-version }}

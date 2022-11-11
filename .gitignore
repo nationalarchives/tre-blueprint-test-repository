@@ -1,3 +1,5 @@
-# Terraform
+tmp/
+.venv*/
+venv*/
 .terraform
 .vscode
