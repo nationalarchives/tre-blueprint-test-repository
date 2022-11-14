@@ -16,9 +16,9 @@ terraform {
   }
 }
 
-# module "tre_bp_poc" {
-#   source = "../terraform-modules/tre-bp-poc"
-#   env = var.env
-#   prefix = var.prefix
-#   assume_role = var.assume_role
-# }
+module "tre_bp_poc" {
+  source = "../terraform-modules/tre-bp-poc"
+  env = var.env
+  prefix = var.prefix
+  assume_role = var.assume_role
+}
