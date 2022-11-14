@@ -1,4 +1,6 @@
 # Terraform
+terraform
+terraform.*
 .terraform*
 backend*
 *.tfvars

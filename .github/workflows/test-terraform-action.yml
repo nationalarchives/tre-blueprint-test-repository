@@ -1,4 +1,4 @@
-name: test-terraform-action
+name: terraform-environments-action
 on:
   workflow_call:
     inputs:
@@ -31,7 +31,7 @@ jobs:
         run: |
           echo ${{ github.event_name }}
           terraform -v
-          cd test-terraform    
+          cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
@@ -49,13 +49,13 @@ jobs:
           URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         run: | 
           pwd
-          cd test-terraform
+          cd terraform-environments
           python3 script/slack.py
       - name: Upload Terraform Plan
         uses: actions/upload-artifact@v3
         with:
           name: terraform-plan
-          path: test-terraform/plan.out
+          path: terraform-environments/plan.out
   approve:
     needs: plan
     runs-on: ubuntu-latest
@@ -83,11 +83,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: terraform-plan
-          path: test-terraform/
+          path: terraform-environments/
       - name: Test Terraform Init
         run: |
           ls -la
-          cd test-terraform
+          cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           terraform init -backend-config=backend.conf
