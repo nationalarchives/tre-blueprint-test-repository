@@ -15,3 +15,10 @@ terraform {
   backend "s3" {
   }
 }
+
+module "tre_bp_poc" {
+  source = "../terraform-modules/tre-bp-poc"
+  env = var.env
+  prefix = var.prefix
+  assume_role = var.assume_role
+}
