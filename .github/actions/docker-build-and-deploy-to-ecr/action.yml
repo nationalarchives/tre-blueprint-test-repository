@@ -1,0 +1,75 @@
+# Action to build then push a given Docker image to ECR, creating the
+# repository name in ECR first if it does not exist.
+name: 'Docker build and deploy to ECR'
+description: 'Push Docker image to ECR, creating repository if necessary'
+inputs:
+  dockerfile-dir:
+    description: 'The directory containing the Docker file to build; e.g. "build-dir"'
+    required: true
+  image-name:
+    description: 'The name of the Docker image to push; e.g. "some-image"'
+    required: true
+  image-version:
+    description: 'The version of the Docker image to push; e.g. "1.2.3"'
+    required: true
+  ecr-registry-path:
+    description: 'The path part of the repository name; i.e. the "alpha" in "alpha/docker-image-name"'
+    required: true
+  aws-region:
+    description: 'The AWS region to deploy to'
+    required: true
+  role-to-assume:
+    description: 'The AWS role for authentication'
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: AWS credential setup
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ inputs.role-to-assume }}
+        aws-region: ${{ inputs.aws-region }}
+        # triggering-actor could differ for re-runs: https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+        role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
+    - name: AWS ECR login
+      id: aws-ecr-login
+      uses: aws-actions/amazon-ecr-login@v1
+    - name: Docker build and tag
+      shell: bash
+      env:
+        REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
+        REGISTRY_PATH: ${{ inputs.ecr-registry-path }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_VERSION: ${{ inputs.image-version }}
+        ECR_REPOSITORY_NAME: ${{ inputs.ecr-registry-path }}/${{ inputs.image-name }}
+      run: |
+        docker images
+        docker build \
+          --tag "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_VERSION}" \
+          "${{ inputs.dockerfile-dir }}"
+        docker images
+    - name: 'AWS ECR docker push'
+      shell: bash
+      env:
+        REGISTRY: ${{ steps.aws-ecr-login.outputs.registry }}
+        REGISTRY_PATH: ${{ inputs.ecr-registry-path }}
+        IMAGE_NAME: ${{ inputs.image-name }}
+        IMAGE_TAG: ${{ inputs.image-version }}
+        ECR_REPOSITORY_NAME: ${{ inputs.ecr-registry-path }}/${{ inputs.image-name }}
+      run: |
+        # Create ECR repository if it doesn't exist
+        if [[ $(aws ecr describe-repositories \
+          --region "${{ inputs.aws-region }}" \
+          --repository-names "${ECR_REPOSITORY_NAME}" \
+        ) ]]; then
+          printf 'Repository "%s" already exists' "${ECR_REPOSITORY_NAME}"
+        else
+          printf 'Creating repository "%s"' "${ECR_REPOSITORY_NAME}"
+          aws ecr create-repository \
+            --region "${{ inputs.aws-region }}" \
+            --repository-name "${ECR_REPOSITORY_NAME}" \
+            --image-scanning-configuration \
+            scanOnPush=true
+        fi
+
+        docker push "${REGISTRY}/${REGISTRY_PATH}/${IMAGE_NAME}:${IMAGE_TAG}"

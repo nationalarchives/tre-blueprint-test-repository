@@ -1,0 +1,19 @@
+name: test-action-workflow-dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      example-input-1:
+        required: true
+        description: An example input argument
+        type: string
+        default: 'Example default value 123'
+jobs:
+  example-job-1:
+    env:
+      example_env_var: 'Alpha, bravo, charlie'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test 1
+        run: |
+          printf 'example_env_var=%s\n' "${example_env_var}"
+          printf 'example_env_var=%s\n' "${{ github.event.inputs.example-input-1 }}"
