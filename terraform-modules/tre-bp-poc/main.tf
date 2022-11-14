@@ -3,7 +3,7 @@
 resource "aws_lambda_function" "tre_bp_poc" {
   function_name = "${var.prefix}-${var.env}-poc-lambda"
   package_type = "Image"
-  image_uri = ""
+  image_uri = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${data.aws_region.current.name}.amazonaws.com/tre-v2/poc-lambda:0.1.16"
   role = aws_iam_role.tre_bp_poc_lambda.arn
 }
 
@@ -63,4 +63,12 @@ data "aws_iam_policy_document" "tre_bp_poc_lambda_invoke_polciy" {
     ]
   }
 
+}
+
+data "aws_caller_identity" "current" {
+
+}
+
+data "aws_region" "current" {
+  
 }
