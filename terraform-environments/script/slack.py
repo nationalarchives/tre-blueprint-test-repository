@@ -3,7 +3,8 @@ import os
 
 slack_token = os.environ['SLACK_TOKEN']
 slack_channel = os.environ['SLACK_CHANNEL']
-github_url = os.environ['URL'] 
+github_url = os.environ['URL']
+env = os.environ['ENV']
 
 # Get the plan.out file
 def get_file_content(file_name):
@@ -15,7 +16,7 @@ def get_file_content(file_name):
 # Post file with slack 
 def send_file():
     content = get_file_content('plan.txt')
-    message = f'*Plese review the plan below before approving in <{github_url}|here>*'
+    message = f'*Plese review the plan below before for `{env}` approving in <{github_url}|here>*'
     url = "https://slack.com/api/files.upload"
     data = {
         'token': slack_token,

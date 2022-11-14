@@ -29,7 +29,6 @@ jobs:
         uses: actions/checkout@v2
       - name: Terraform Plan
         run: |
-          echo ${{ github.event_name }}
           terraform -v
           cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
@@ -47,6 +46,7 @@ jobs:
           SLACK_CHANNEL: tna-test
           SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
           URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          ENV: ${{ inputs.environment }}
         run: | 
           pwd
           cd terraform-environments
@@ -56,8 +56,10 @@ jobs:
         with:
           name: terraform-plan
           path: terraform-environments/plan.out
+          retention-days: 1
   approve:
-    needs: plan
+    needs: 
+      - plan
     runs-on: ubuntu-latest
     environment: poc-manual-step
     steps:
@@ -84,7 +86,7 @@ jobs:
         with:
           name: terraform-plan
           path: terraform-environments/
-      - name: Test Terraform Init
+      - name: Terraform Apply
         run: |
           ls -la
           cd terraform-environments
