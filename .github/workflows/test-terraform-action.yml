@@ -81,6 +81,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Terraform Apply
         run: |
+          terraform -v
           ls -la
           cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
