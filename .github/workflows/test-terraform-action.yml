@@ -31,11 +31,11 @@ jobs:
         run: |
           terraform -v
           cd terraform-environments
-          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf 2> /dev/null &
-          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars 2> /dev/null &
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
+          aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           pwd
           ls -la
-          terraform init -backend-config=backend.conf 
+          terraform init -backend-config=backend.conf &>/dev/null &
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
           terraform plan -var-file="terraform.tfvars" -out plan.out &>/dev/null &
@@ -94,7 +94,7 @@ jobs:
           cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
-          terraform init -backend-config=backend.conf
+          terraform init -backend-config=backend.conf &>/dev/null &
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}        
           terraform apply -input=false plan.out >> apply.out
