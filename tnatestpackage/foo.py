@@ -4,6 +4,6 @@ def event_python():
 
 
 def event_python_2():
-    print("I created the Event Python to reach the CodeArtifact eepository, but she's gone much,"
+    print("I created the Event Python to reach the CodeArtifact repository, but she's gone much,"
           " much farther than that. She tore a hole in our universe, a gateway to another dimension. "
           "A dimension of pure chaos.")
