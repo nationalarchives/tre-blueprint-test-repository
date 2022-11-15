@@ -130,4 +130,4 @@ The above action calls the following composite GitHub Action examples:
 The following example GitHub Action demonstrates how to build and deploy a
 Python wheel package to AWS CodeArtifact:
 
-* []()
+* [test-codeartifact-main.yml](.github/workflows/test-codeartifact-main.yml)
