@@ -96,7 +96,7 @@ jobs:
           cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
-          terraform init -backend-config=backend.conf &>/dev/null &
+          terraform init -backend-config=backend.conf -reconfigure
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
           aws s3 cp s3://dev-te-testdata/tmp/${{ github.triggering_actor }}/plan.out plan.out  
