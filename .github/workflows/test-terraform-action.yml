@@ -38,7 +38,7 @@ jobs:
           terraform init -backend-config=backend.conf
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          terraform plan -var-file="terraform.tfvars" -out plan.out &>/dev/null &
+          terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
           terraform show -no-color plan.out >> plan.txt
           ls -la
       - name: Send to Slack
