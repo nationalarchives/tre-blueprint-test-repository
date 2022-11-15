@@ -40,23 +40,27 @@ jobs:
           terraform workspace select ${{ inputs.environment }}
           terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
           terraform show -no-color plan.out >> plan.txt
+          aws s3 cp plan.out s3://dev-te-testdata/tmp/${{ github.triggering_actor }}/plan.out
           ls -la
       - name: Send to Slack
         env:
           SLACK_CHANNEL: tna-test
-          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-          URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
+          GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           ENV: ${{ inputs.environment }}
+          LOG_GROUP_NAME: "terraform-plan-${{ inputs.environment }}"
+          LOG_STREAM_NAME: ${{ github.run_id }}${{ github.run_attempt }}
         run: | 
           pwd
           cd terraform-environments
-          python3 script/slack.py
-      - name: Upload Terraform Plan
-        uses: actions/upload-artifact@v3
-        with:
-          name: terraform-plan
-          path: terraform-environments/plan.out
-          retention-days: 1
+          pip install boto3
+          python3 script/log.py
+      # - name: Upload Terraform Plan
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: terraform-plan
+      #     path: terraform-environments/plan.out
+      #     retention-days: 1
   approve:
     needs: 
       - plan
@@ -92,7 +96,8 @@ jobs:
           cd terraform-environments
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> backend.conf
           aws ssm get-parameters --name ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
-          terraform init -backend-config=backend.conf
+          terraform init -backend-config=backend.conf &>/dev/null &
           terraform workspace list
-          terraform workspace select ${{ inputs.environment }}        
+          terraform workspace select ${{ inputs.environment }}
+          aws s3 cp s3://dev-te-testdata/tmp/${{ github.triggering_actor }}/plan.out plan.out  
           terraform apply -input=false plan.out >> apply.out
