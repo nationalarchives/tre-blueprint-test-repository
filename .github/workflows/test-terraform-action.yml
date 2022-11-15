@@ -40,7 +40,7 @@ jobs:
           terraform workspace select ${{ inputs.environment }}
           terraform plan -var-file="terraform.tfvars" -out plan.out >> /dev/null
           terraform show -no-color plan.out >> plan.txt
-          aws s3 cp plan.out s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out
+          # aws s3 cp plan.out s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out
           ls -la
       - name: Send to Slack
         env:
@@ -55,6 +55,13 @@ jobs:
           cd terraform-environments
           pip install boto3
           python3 script/log.py
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-plan
+          path: terraform-environments/plan.out
+          retention-days: 1
+
   approve:
     needs: 
       - plan
@@ -80,6 +87,11 @@ jobs:
           role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v3
+        with:
+          name: terraform-plan
+          path: terraform-environments/        
       - name: Terraform Apply
         run: |
           terraform -v
@@ -90,5 +102,5 @@ jobs:
           terraform init -backend-config=backend.conf -reconfigure
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
-          aws s3 cp s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out plan.out  
+          # aws s3 cp s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out plan.out  
           terraform apply -input=false plan.out >> apply.out
