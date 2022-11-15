@@ -106,28 +106,28 @@ or update an environment:
 The following GitHub Action workflow is a reusable component that shows how to
 apply an example Terraform configuration to a target AWS environment:
 
-* [test-terraform-action.yml](.github/workflows/test-terraform-action.yml)
+* [.github/workflows/test-terraform-action.yml](.github/workflows/test-terraform-action.yml)
 
 The following GitHub Action workflow reuses the above component to provision
 an example Terraform configuration across multiple target AWS environments:
 
-* [.github/workflows/test-terraform-apply.yml](.github/workflows/test-terraform-apply.yml)
+* [.github/workflows/test-terraform-deployment.yml](.github/workflows/test-terraform-deployment.yml)
 
 # Docker Images
 
 The following example GitHub Action builds, versions and deploys a Docker
 image to AWS ECR:
 
-* [poc-lambda-ecr-deploy.yml](.github/workflows/poc-lambda-ecr-deploy.yml)
+* [.github/workflows/poc-lambda-ecr-deploy.yml](.github/workflows/poc-lambda-ecr-deploy.yml)
 
 The above action calls the following composite GitHub Action examples:
 
-* [get-next-version](.github/actions/get-next-version/action.yml)
-* [docker-build-and-deploy-to-ecr](.github/actions/docker-build-and-deploy-to-ecr/action.yml)
+* [.github/actions/get-next-version/action.yml](.github/actions/get-next-version/action.yml)
+* [.github/actions/docker-build-and-deploy-to-ecr/action.yml](.github/actions/docker-build-and-deploy-to-ecr/action.yml)
 
 # Python WHL packages
 
 The following example GitHub Action demonstrates how to build and deploy a
 Python wheel package to AWS CodeArtifact:
 
-* [test-codeartifact-main.yml](.github/workflows/test-codeartifact-main.yml)
+* [.github/workflows/test-codeartifact-main.yml](.github/workflows/test-codeartifact-main.yml)
