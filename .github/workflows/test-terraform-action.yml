@@ -85,11 +85,11 @@ jobs:
           role-session-name: role-session-name-${{ github.actor }}-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Download Terraform Plan
-        uses: actions/download-artifact@v3
-        with:
-          name: terraform-plan
-          path: terraform-environments/
+      # - name: Download Terraform Plan
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: terraform-plan
+      #     path: terraform-environments/
       - name: Terraform Apply
         run: |
           ls -la
