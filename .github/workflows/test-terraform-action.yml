@@ -14,6 +14,13 @@ on:
         required: true
       SLACK_TOKEN:
         required: true
+    env:
+    SLACK_CHANNEL: tna-test
+    SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
+    GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+    ENV: ${{ inputs.environment }}
+    LOG_GROUP_NAME: "terraform-plan-${{ inputs.environment }}"
+    LOG_STREAM_NAME: "run-id-${{ github.run_id }}-attempt-${{ github.run_attempt }}"
 jobs:
   plan:
     runs-on: ubuntu-latest
@@ -47,13 +54,13 @@ jobs:
           aws s3 cp plan.out s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out
           ls -la
       - name: Send to Slack
-        env:
-          SLACK_CHANNEL: tna-test
-          SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
-          GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          ENV: ${{ inputs.environment }}
-          LOG_GROUP_NAME: "terraform-plan-${{ inputs.environment }}"
-          LOG_STREAM_NAME: "run-id-${{ github.run_id }}-attempt-${{ github.run_attempt }}"
+        # env:
+        #   SLACK_CHANNEL: tna-test
+        #   SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
+        #   GITHUB_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        #   ENV: ${{ inputs.environment }}
+        #   LOG_GROUP_NAME: "terraform-plan-${{ inputs.environment }}"
+        #   LOG_STREAM_NAME: "run-id-${{ github.run_id }}-attempt-${{ github.run_attempt }}"
         run: | 
           pwd
           cd terraform-environments
