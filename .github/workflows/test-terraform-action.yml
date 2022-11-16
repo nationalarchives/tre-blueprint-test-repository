@@ -39,7 +39,7 @@ jobs:
           terraform_version: 1.3.4
           terraform_wrapper: false
       - name: Echo
-        run: echo ${{ LOG_GROUP_NAME }}
+        run: echo ${{ env.LOG_GROUP_NAME }}
       - name: Terraform Plan
         run: |
           terraform -v
