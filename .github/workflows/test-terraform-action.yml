@@ -27,14 +27,14 @@ env:
 jobs:
   plan:
     runs-on: ubuntu-latest
-    environment: ${{ env.ENV }}
+    environment: ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
-          role-session-name: role-session-name-${{ env.TRIGGERING_ACTOR }}
+          role-session-name: role-session-name-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -60,20 +60,20 @@ jobs:
       - name: Manual Approve Info
         run: |
           terraform -v
-          echo ${{ env.TRIGGERING_ACTOR }}
+          echo ${{ github.triggering_actor }}
           echo ${{ github.actor }}          
   apply:
     runs-on: ubuntu-latest
     needs: 
       - approve
-    environment:  ${{ env.ENV }}
+    environment:  ${{ inputs.environment }}
     steps:
       - name: Configure AWS credentials for test AWS role
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: eu-west-2
-          role-session-name: role-session-name-${{ env.TRIGGERING_ACTOR }}
+          role-session-name: role-session-name-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
       - uses: hashicorp/setup-terraform@v1
@@ -89,6 +89,6 @@ jobs:
           aws ssm get-parameters --name ${{ env.AWS_PARAM_STORE_TF_VARS_KEY }} --with-decryption --query "Parameters[*].Value" --output text >> terraform.tfvars
           terraform init -backend-config=backend.conf -reconfigure
           terraform workspace list
-          terraform workspace select ${{ env.ENV }}
-          aws s3 cp s3://dev-te-testdata/tmp/${{ env.ENV }}/${{ env.TRIGGERING_ACTOR }}/plan.out plan.out  
+          terraform workspace select ${{ inputs.environment }}
+          aws s3 cp s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out plan.out  
           terraform apply -input=false plan.out >> apply.out
