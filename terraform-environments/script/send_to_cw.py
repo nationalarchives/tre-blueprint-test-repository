@@ -13,7 +13,7 @@ log_group_name = os.environ['LOG_GROUP_NAME']
 log_stream_name = os.environ['LOG_STREAM_NAME']
 file_name = sys.argv[1]
 if file_name == 'error.txt':
-    log_group_name = "github_actions_error"
+    log_group_name = "github-actions-error"
 # Get the plan.txt file
 
 def get_file_content(file_name):
