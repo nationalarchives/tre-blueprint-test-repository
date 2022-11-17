@@ -4,9 +4,7 @@ set -e
 
 echo
 function cleanup {
-    ls -la
     status=$?; 
-    echo $status
     if [ $status != 0 ] && [ -f error.txt ]; then echo "Failure: $status" && python3 script/send_to_cw.py error.txt > /dev/null 2>&1; fi
 }
 
