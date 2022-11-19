@@ -92,4 +92,4 @@ jobs:
           terraform workspace list
           terraform workspace select ${{ inputs.environment }}
           aws s3 cp s3://dev-te-testdata/tmp/${{ inputs.environment }}/${{ github.triggering_actor }}/plan.out plan.out  
-          terraform apply -input=false plan.out >> apply.out
+          terraform apply -input=false plan.out > apply.out
