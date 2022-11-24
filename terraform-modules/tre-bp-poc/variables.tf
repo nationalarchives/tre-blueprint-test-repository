@@ -9,3 +9,7 @@ variable "prefix" {
 variable "assume_role" {
   type = string
 }
+
+variable "permissions_boundary" {
+  
+}

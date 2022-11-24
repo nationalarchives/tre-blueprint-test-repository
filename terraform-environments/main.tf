@@ -21,4 +21,5 @@ module "tre_bp_poc" {
   env = var.env
   prefix = var.prefix
   assume_role = var.assume_role
+  permissions_boundary = var.permissions_boundary
 }

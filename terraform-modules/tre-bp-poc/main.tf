@@ -10,6 +10,7 @@ resource "aws_lambda_function" "tre_bp_poc" {
 resource "aws_iam_role" "tre_bp_poc_lambda" {
   name = "${var.prefix}-${var.env}-poc-lambda-role"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+  permissions_boundary = var.permissions_boundary
 }
 
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
@@ -64,6 +65,16 @@ data "aws_iam_policy_document" "tre_bp_poc_lambda_invoke_polciy" {
   }
 
 }
+
+# resource "aws_iam_role" "test-permission" {
+#   name = "test-permission"
+#   assume_role_policy = data.aws_iam_policy_document.lambda_assume_role_policy.json
+# }
+
+# resource "aws_iam_role_policy_attachment" "name" {
+#   role = aws_iam_role.test-permission.name
+#   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+# }
 
 data "aws_caller_identity" "current" {
 
