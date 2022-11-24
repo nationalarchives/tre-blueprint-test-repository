@@ -36,7 +36,6 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           role-to-assume: ${{ secrets.ROLE_ARN }}
-          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}
           aws-region: eu-west-2
           role-session-name: github-username-${{ github.triggering_actor }}
       - name: Checkout
