@@ -14,7 +14,7 @@ jobs:
   terraform-deployment:
     uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/tre-platform-actions.yml@feature/DTE-432/initial-terraform-config
     with:
-      environment: ${{ input.environment }}
+      environment: ${{ inputs.environment }}
     secrets:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
       AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
