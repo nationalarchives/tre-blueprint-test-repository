@@ -1,4 +1,4 @@
-name: Terraform deployment
+name: Terraform platform deployment
 on:
   workflow_dispatch:
     inputs:
