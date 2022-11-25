@@ -14,6 +14,9 @@ on:
         required: true
       SLACK_TOKEN:
         required: true
+      TF_VAR_TERRAFORM_ASSUME_ROLES:
+        required: true
+
 
 env:
   SLACK_CHANNEL: tna-test
