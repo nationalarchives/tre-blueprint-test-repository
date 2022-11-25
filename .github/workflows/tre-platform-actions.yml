@@ -14,10 +14,6 @@ on:
         required: true
       SLACK_TOKEN:
         required: true
-      AWS_EXTERNAL_ID:
-        required: true
-      TF_VAR_TERRAFORM_ASSUME_ROLES:
-        required: true
 
 env:
   SLACK_CHANNEL: tna-test
@@ -42,9 +38,10 @@ jobs:
           role-session-name: github-username-${{ github.triggering_actor }}
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: hashicorp/setup-terraform@v1
+      - name: Setting terraform version
+        uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.3.4
+          terraform_version: 1.3.5
           terraform_wrapper: false
       - name: Install python dependencies
         run: pip install -r terraform-environments/script/requirements.txt
