@@ -28,7 +28,6 @@ env:
   LOG_STREAM_NAME: "run-id-${{ github.run_id }}-attempt-${{ github.run_attempt }}"
   AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
   AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
-  TF_VAR_assume_roles: ${{ secrets.TF_VAR_TERRAFORM_ASSUME_ROLES }}
   TRIGGERING_ACTOR: ${{ github.triggering_actor }}
 jobs:
   plan:
