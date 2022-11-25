@@ -16,6 +16,6 @@ aws ssm get-parameters --name "${AWS_PARAM_STORE_TF_VARS_KEY}" --with-decryption
 terraform init -backend-config=backend.conf -reconfigure > /dev/null 2> error.txt
 terraform workspace list
 terraform workspace select "${ENV}"
-terraform plan "${TF_VAR_TERRAFORM_ASSUME_ROLES}" -var-file="terraform.tfvars" -input=false -out plan.out > /dev/null 2> error.txt
+terraform plan -var "${TF_VAR_TERRAFORM_ASSUME_ROLES}" -var-file="terraform.tfvars" -input=false -out plan.out > /dev/null 2> error.txt
 terraform show -no-color plan.out > plan.txt
 aws s3 cp plan.out s3://dev-te-testdata/tmp/"${ENV}"/"${TRIGGERING_ACTOR}"/plan.out
