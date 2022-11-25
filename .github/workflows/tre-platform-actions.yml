@@ -55,7 +55,7 @@ jobs:
       - name: Send to Slack
         run: | 
           pwd
-          cd terraform-environments
+          cd tre-platform
           python3 script/log.py
   approve:
     needs: 
