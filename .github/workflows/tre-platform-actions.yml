@@ -47,7 +47,7 @@ jobs:
           terraform_version: 1.3.5
           terraform_wrapper: false
       - name: Install python dependencies
-        run: pip install -r terraform-environments/script/requirements.txt
+        run: pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
           cd tre-platform
