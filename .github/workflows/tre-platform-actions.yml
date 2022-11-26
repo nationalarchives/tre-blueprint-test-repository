@@ -50,12 +50,10 @@ jobs:
         run: pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
-          cd tre-platform
           ./plan.sh
       - name: Send to Slack
         run: | 
           pwd
-          cd tre-platform
           python3 script/log.py
   approve:
     needs: 
