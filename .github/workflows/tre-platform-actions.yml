@@ -51,7 +51,7 @@ jobs:
           terraform_wrapper: false
       - name: Install python dependencies
         run: |
-          echo ${{ env.TF_DIR }}
+          echo ${{ inputs.env_vars }}
           # pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
