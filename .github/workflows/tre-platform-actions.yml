@@ -61,12 +61,12 @@ jobs:
     runs-on: ubuntu-latest
     environment: poc-manual-step
     steps:
-      - name: Manual Approve Info
+      - id: approval
         run: |
           terraform -v
           echo ${{ github.triggering_actor }}
           echo ${{ github.actor }}
-          echo ${{ runner.name }}
+          echo ${{ steps.approval.outputs }}
 
 
 
