@@ -13,10 +13,20 @@ permissions:
   id-token: write
   contents: write
 jobs:
+  set-tf-dir:
+    runs-on: ubuntu-latest
+    outputs:
+      tf_var: ${{  steps.set-env.outputs.tf_var }}
+    steps:
+      - id: set-env
+        run: |
+          echo "::set-output name=tf_var::$TF_VAR"       
+
   terraform-deployment:
     uses: nationalarchives/tre-blueprint-test-repository/.github/workflows/tre-platform-actions.yml@feature/DTE-432/initial-terraform-config
     with:
       environment: ${{ inputs.environment }}
+      env_vars: ${{ env.TF_DIR }}
     secrets:
       ROLE_ARN: ${{ secrets.ROLE_ARN }}
       AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}

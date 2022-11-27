@@ -5,6 +5,9 @@ on:
       environment:
         type: string
         required: true
+      env_vars:
+        type: string
+        required: true
     secrets:
       ROLE_ARN:
         required: true
@@ -49,7 +52,7 @@ jobs:
       - name: Install python dependencies
         run: |
           echo ${{ env.TF_DIR }}
-          pip install -r script/requirements.txt
+          # pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
           echo ${{ env.TF_DIR }}
