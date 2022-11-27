@@ -4,9 +4,11 @@ on:
     inputs:
       environment:
         type: choice
-        description: Choose the workflow you want to run from the dropdown list
+        description: Choose the environment you want to deploy to from the dropdown list
         options:
           - platform
+env:
+  TF_DIR: tre-platform
 permissions:
   id-token: write
   contents: write
@@ -20,5 +22,4 @@ jobs:
       AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
       AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
       SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
-      AWS_EXTERNAL_ID: ${{ secrets.AWS_EXTERNAL_ID }}
       TF_VAR_TERRAFORM_ASSUME_ROLES: ${{ secrets.TF_VAR_TERRAFORM_ASSUME_ROLES }}
