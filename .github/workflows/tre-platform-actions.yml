@@ -55,6 +55,7 @@ jobs:
       - name: Send to Slack
         run: | 
           pwd
+          echo ${{ env.LOG_GROUP_NAME }}
           python3 script/log.py
   approve:
     needs: 
