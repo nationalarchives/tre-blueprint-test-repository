@@ -52,6 +52,8 @@ jobs:
           terraform_wrapper: false
       - name: Install python dependencies
         run: |
+          pwd
+          ls- la
           pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
