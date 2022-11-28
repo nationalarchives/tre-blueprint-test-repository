@@ -42,7 +42,12 @@ jobs:
       - name: Copy scripts 
         uses: actions/checkout@v2
         with:
-          repository: nationalarchives/tre-blueprint-test-repository          
+          repository: nationalarchives/tre-blueprint-test-repository
+      - name: Check directories
+        run: |
+          pwd
+          ls -la
+          ls -la ../          
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setting terraform version
