@@ -28,7 +28,7 @@ env:
   AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
   AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
   TRIGGERING_ACTOR: ${{ github.triggering_actor }}
-  TF_DIR: platform
+  TF_DIR: tf-backend
 jobs:
   plan:
     runs-on: ubuntu-latest
