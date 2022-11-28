@@ -4,7 +4,10 @@ on:
     inputs:
       environment:
         type: string
-        required: true        
+        required: true
+      tf_dir:
+        type: string
+        required: true
     secrets:
       ROLE_ARN:
         required: true
