@@ -47,7 +47,8 @@ jobs:
         run: |
           pwd
           ls -la
-          ls -la ../          
+          ls -la ../ 
+          cp -r poc-lambda ../      
       - name: Checkout
         uses: actions/checkout@v2
       - name: Setting terraform version
@@ -57,7 +58,9 @@ jobs:
           terraform_wrapper: false
       - name: Install python dependencies
         run: |
+          ls -la
           pwd
+          ls -la ../
           ls -la ../../
           pip install -r script/requirements.txt
       - name: Terraform Plan
