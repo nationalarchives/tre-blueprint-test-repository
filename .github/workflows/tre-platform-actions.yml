@@ -17,10 +17,6 @@ on:
         required: true
       SLACK_TOKEN:
         required: true
-      TF_VAR_TERRAFORM_ASSUME_ROLES:
-        required: true
-
-
 env:
   SLACK_CHANNEL: tna-test
   SLACK_WEBHOOK: ${{ secrets.SLACK_TOKEN }}
@@ -31,7 +27,7 @@ env:
   AWS_PARAM_STORE_TF_BACKEND_KEY: ${{ secrets.AWS_PARAM_STORE_TF_BACKEND_KEY }}
   AWS_PARAM_STORE_TF_VARS_KEY: ${{ secrets.AWS_PARAM_STORE_TF_VARS_KEY }}
   TRIGGERING_ACTOR: ${{ github.triggering_actor }}
-  TF_DIR: tf-backend
+  TF_DIR: ${{ inputs.tf_dir }}
 jobs:
   plan:
     runs-on: ubuntu-latest
