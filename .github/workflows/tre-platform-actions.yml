@@ -68,7 +68,26 @@ jobs:
           terraform -v
           echo ${{ github.triggering_actor }}
           echo ${{ github.actor }}
-
-
-
-          
+  apply:
+    runs-on: ubuntu-latest
+    needs: 
+      - approve
+    environment:  ${{ inputs.environment }}
+    steps:
+      - name: Configure AWS credentials for test AWS role
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: eu-west-2
+          role-session-name: role-session-name-${{ github.triggering_actor }}
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.3.5
+          terraform_wrapper: false
+      - name: Terraform Apply
+        run: |
+          terraform -v
+          ls -la
+          ./apply.sh          
