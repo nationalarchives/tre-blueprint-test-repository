@@ -53,7 +53,7 @@ jobs:
       - name: Install python dependencies
         run: |
           pwd
-          ls -la
+          ls -la ../
           pip install -r script/requirements.txt
       - name: Terraform Plan
         run: |
